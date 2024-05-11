@@ -1,0 +1,38 @@
+# 前端程序 初始化参数
+common:
+    lid_topic:  "/livox/lidar"    # 原数据话题
+    imu_topic:  "/livox/imu"
+    time_sync_en: false         # imu lidar 硬件同步
+    time_offset_lidar_to_imu: 0.0 # imu lidar 时间偏移             
+
+preprocess:
+    lidar_type: 1                # MID-360=1
+    scan_line: 4                 #拟合线束数量
+    blind: 1.2                   #自定义过滤盲区   （米）
+
+mapping:
+    acc_cov: 0.1                  # MID 360 基本参数
+    gyr_cov: 0.1
+    b_acc_cov: 0.0001
+    b_gyr_cov: 0.0001
+    fov_degree:    360
+    det_range:     360
+    extrinsic_est_en:  false             # 实时标定
+    extrinsic_T: [ 0.0, 0.0, -0.05 ]     # imu lidar 外参
+    extrinsic_R: [ 1, 0, 0,
+                   0, 1, 0,
+                   0, 0, 1]
+
+publish:
+    path_en:  false
+    scan_publish_en:  true       # 发布点云
+    dense_publish_en: true       # 点云滤波
+    scan_bodyframe_pub_en: true  # 以imu为坐标系发布点云
+
+pcd_save:
+    pcd_save_en: false           # 前端程序是否保存初始地图
+    interval: -1                 
+
+
+
+
