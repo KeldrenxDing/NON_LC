@@ -1,0 +1,58 @@
+<launch>
+    <!-- 后端程序 启动参数  -->
+    <param name="scan_line" type="int" value="16" />
+
+    <!-- if 1, 建图采用 10 Hz, if 2, 建图采用 5 Hz -->
+    <param name="mapping_skip_frame" type="int" value="1" />
+
+    <!-- 盲区过滤参数 （米） -->
+    <param name="minimum_range" type="double" value="0.1"/>
+    <!-- 建图单帧线/面分辨率（米）  -->
+    <param name="mapping_line_resolution" type="double" value="0.2"/>
+    <param name="mapping_plane_resolution" type="double" value="0.4"/>
+
+    <param name="mapviz_filter_size" type="double" value="0.1"/>
+
+    <!-- 滤波参数 （点云帧间隔 距离/角度） -->
+    <param name="keyframe_meter_gap" type="double" value="0.1"/> 
+    <param name="keyframe_deg_gap" type="double" value="5.0"/> 
+
+    <!-- 闭环检测 -->
+    <param name="sc_dist_thres" type="double" value="0.4"/> <!-- 点云匹配检测阈值（米） -->
+    <param name="sc_max_radius" type="double" value="40"/>  <!-- 检测最大半径（米） 室内 20 / 40  -->
+    <!-- <param name="sc_max_radius" type="double" value="80.0"/> 室外 80 -->
+
+    <!-- 闭环优化 -->
+    <param name="historyKeyframeSearchRadius" value="1.5"/>    <!-- 历史点云帧搜索半径（米）  -->
+    <param name="historyKeyframeSearchTimeDiff" value=" 200.0"/> <!-- 历史点云帧搜索 帧范围（帧）  -->
+    <param name="historyKeyframeSearchNum" value="20"/>    <!-- 历史点云帧数量（帧） 增加此值可以提高精度，但增大计算量 -->
+    <param name="speedFactor" value="1"/>           <!-- 倍速因子 不调整 -->
+    <param name="loopClosureFrequency" value="4.0"/> <!-- 矫正频率 相对于输入数据的频率 成比例 -->
+    <param name="graphUpdateFrequency" value="2.0"/>    <!-- 图优化频率（帧/次）  -->
+    <param name="graphUpdateTimes" value="5"/>     <!-- 图优化时间（帧）  -->
+    <param name="loopNoiseScore" value="0.1"/> <!-- 闭环矫正噪声权重 离线运行可0.02提高精度 -->
+    <param name="vizmapFrequency" value="10"/>
+    <param name="loopFitnessScoreThreshold" value="0.8"/> <!-- 闭环优化 二次 ICP 检测权重分数 -->
+    
+    
+    <param name="lidar_type" type="string" value="VLP16"/>       <!-- MID360 采用VLP16预设  -->
+    <remap from="/velodyne_points" to="/velodyne_points"/>
+    
+    <!-- 接收 前端程序数据（里程计、点云、位姿坐标系） -->
+    <remap from="/aft_mapped_to_init" to="/Odometry"/>
+    <remap from="/velodyne_cloud_registered_local" to="/cloud_registered_body"/>
+    <remap from="/cloud_for_scancontext" to="/cloud_registered_lidar"/>  
+
+    <!-- 地图保存路径 /结尾 -->
+    <param name="save_directory" type="string" value="/home/non2/SLAM/MY_TEST/LIO_NON/src/LIO_NON/save_PCD/"/>  
+
+    <!-- ROS节点名称 -->
+    <node pkg="non_lc" type="alaserPGO" name="alaserPGO" output="screen" />
+
+    <!-- rviz界面启动 -->
+    <arg name="rviz" default="true" />
+    <group if="$(arg rviz)">
+        <node launch-prefix="nice" pkg="rviz" type="rviz" name="NON_LC" args="-d $(find non_lc)/rviz_cfg/LIO_NON_LOOP.rviz" />
+    </group>
+
+</launch>
