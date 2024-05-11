@@ -1,0 +1,4 @@
+cd ~/SLAM/MY_TEST/LIO_NON
+source devel/setup.bash 
+roslaunch non_lc 360LOOP.launch 
+

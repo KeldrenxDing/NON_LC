@@ -1,0 +1,3 @@
+cd ~/SLAM/MY_TEST/LIO_NON
+source devel/setup.bash 
+roslaunch lio_non_fastlio 360_mapping.launch
